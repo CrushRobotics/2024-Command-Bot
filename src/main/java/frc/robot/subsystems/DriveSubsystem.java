@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.util.Units;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -50,23 +51,27 @@ public class DriveSubsystem extends SubsystemBase {
         leftFollower.setInverted(true);
         rightLeader.setInverted(false);
         rightFollower.setInverted(false);
-        //rightFollower.setInverted(true);
+        rightFollower.setInverted(true);
 
-        //leftFollower.follow(leftLeader);
-        //rightFollower.follow(rightLeader);
+        leftFollower.follow(leftLeader);
+        rightFollower.follow(rightLeader);
 
         leftEncoder = leftLeader.getEncoder();
         rightEncoder = rightLeader.getEncoder();
-        var leftGroup = new MotorControllerGroup(rightLeader, rightFollower);
-        var rightGroup = new MotorControllerGroup(leftLeader, leftFollower);
-        diffDrive = new DifferentialDrive(leftGroup, rightGroup);
+        //var leftGroup = new MotorControllerGroup(rightLeader, rightFollower);
+        //var rightGroup = new MotorControllerGroup(leftLeader, leftFollower);
+        diffDrive = new DifferentialDrive(leftLeader, rightLeader);
+
+        leftEncoder.setPositionConversionFactor(0.05224526);
+        rightEncoder.setPositionConversionFactor(0.05224526);
         
-        //leftEncoder.setPosition(0);
-        //rightEncoder.setPosition(0);
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
+
+        ahrs = new AHRS();
     } 
 
-    public void init() {   
-/* 
+    public void init() {    
         rotation2d = new Rotation2d(Units.degreesToRadians(ahrs.getAngle()));
 
         kinematics =
@@ -76,7 +81,6 @@ public class DriveSubsystem extends SubsystemBase {
             rotation2d,
             0, 0,
             new Pose2d(0, 0, new Rotation2d()));
-*/
         //diffDrive.setSafetyEnabled(false);
         
     }
@@ -86,6 +90,9 @@ public class DriveSubsystem extends SubsystemBase {
         // Update dashboard with encoder measurements
         SmartDashboard.putNumber("Left Encoder", leftEncoder.getPosition());
         SmartDashboard.putNumber("Right Encoder", rightEncoder.getPosition());
+
+        // Update dashboard with angle
+        SmartDashboard.putNumber("Angle", ahrs.getAngle());
         
     }
     
@@ -99,6 +106,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void arcadeDrive(double leftOutput, double rightOutput) {
         diffDrive.arcadeDrive(leftOutput, rightOutput);
     }
+
 
     public Pose2d getPose() {
         return odometry.getPoseMeters();

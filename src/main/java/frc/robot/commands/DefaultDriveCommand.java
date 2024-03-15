@@ -19,6 +19,7 @@ public class DefaultDriveCommand extends Command {
     private GenericEntry arcadeDriveEntry;
     private double DEFAULT_MULTIPLIER;
     private double SLOW_MULTIPLIER;
+    long time = 0;
 
     public DefaultDriveCommand(CommandXboxController controller, DriveSubsystem driveSubsystem) {
         this.controller = controller;
@@ -26,8 +27,13 @@ public class DefaultDriveCommand extends Command {
         this.addRequirements(driveSubsystem);
         DEFAULT_MULTIPLIER = .8;
         SLOW_MULTIPLIER = .5;
-        arcadeDriveEntry = Shuffleboard.getTab("Drive").add("Arcade Drive", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+        arcadeDriveEntry = Shuffleboard
+            .getTab("Drive")
+            .add("Arcade Drive", true)
+            .withWidget(BuiltInWidgets.kToggleButton)
+            .getEntry();
         
+
     }
 
     public void setArcadeDrive(boolean mode){
@@ -35,7 +41,7 @@ public class DefaultDriveCommand extends Command {
         Shuffleboard.getTab("Drive").add("Arcade Drive", mode);
     }
     public boolean getArcadeDrive(){
-        return arcadeDriveEntry.getBoolean(false);
+        return arcadeDriveEntry.getBoolean(true);
     }
 
     @Override
@@ -48,11 +54,30 @@ public class DefaultDriveCommand extends Command {
             multiplier = SLOW_MULTIPLIER;
         }
 
+        /* 
+        if (controller.x().getAsBoolean()) {
+            if (time == 0) {
+                time = System.currentTimeMillis();
+            }
+            
+            if (System.currentTimeMillis() < time + 2000) {
+                driveSubsystem.drive(.3, .3);
+            }
+            else {
+                driveSubsystem.drive(0, 0);
+            }
+        }
+        else {
+            time = 0;
+            driveSubsystem.drive(0, 0);
+        }
+        */
+
         if(arcadeMode) {
             double speed = controller.getLeftY() * multiplier;
             double rot = controller.getRightX() * multiplier;
 
-            //driveSubsystem.arcadeDrive(speed, rot);
+            driveSubsystem.arcadeDrive(speed, rot);
         }
         else {
             
