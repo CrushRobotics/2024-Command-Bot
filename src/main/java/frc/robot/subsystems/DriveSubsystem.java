@@ -34,6 +34,8 @@ public class DriveSubsystem extends SubsystemBase {
     AHRS ahrs;
 
     Rotation2d rotation2d;
+    private boolean isDrivingDistance;
+    private double driveDistanceTarget;
 
     public DriveSubsystem() { 
         leftLeader = new CANSparkMax(11, MotorType.kBrushless);
@@ -47,10 +49,9 @@ public class DriveSubsystem extends SubsystemBase {
         rightLeader.restoreFactoryDefaults();
         rightFollower.restoreFactoryDefaults();
 
-        leftLeader.setInverted(true);
-        leftFollower.setInverted(true);
-        rightLeader.setInverted(false);
-        rightFollower.setInverted(false);
+        leftLeader.setInverted(false);
+        leftFollower.setInverted(false);
+        rightLeader.setInverted(true);
         rightFollower.setInverted(true);
 
         leftFollower.follow(leftLeader);
@@ -94,6 +95,15 @@ public class DriveSubsystem extends SubsystemBase {
         // Update dashboard with angle
         SmartDashboard.putNumber("Angle", ahrs.getAngle());
         
+        if (isDrivingDistance)
+        {
+            // Check if we've moved our intended distance
+            if (rightEncoder.getPosition() >= driveDistanceTarget)
+            {
+                diffDrive.arcadeDrive(0, 0);
+                isDrivingDistance = false;
+            }
+        }
     }
     
     public void drive(double leftOutput, double rightOutput) {
@@ -125,4 +135,16 @@ public class DriveSubsystem extends SubsystemBase {
         return kinematics.toChassisSpeeds(wheelSpeeds);
     }
 
+    public void driveDistance (double distance)
+    {
+        // Setup distance flag to tell the period function that we're 
+        // intending to drive a certain distance.
+        isDrivingDistance = true;
+
+        // Set drive distance
+        driveDistanceTarget = distance;
+        
+        // Set motors to move in our intended direction.
+        diffDrive.arcadeDrive(distance > 0 ? 0.2 : -0.2, 0);
+    }
 }
