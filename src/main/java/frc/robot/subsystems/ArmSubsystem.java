@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -74,6 +72,11 @@ public class ArmSubsystem extends PIDSubsystem {
         armLeader.setVoltage(0);
     }
 
+    public void moveToShootPosition()
+    {
+        setTarget(25);
+    }
+
     @Override
     protected void useOutput(double output, double setpoint) {
         // Use voltage from PID controller
@@ -86,5 +89,4 @@ public class ArmSubsystem extends PIDSubsystem {
         // currently doing any calculations to change the units.
         return encoder.getPosition();
     }
-
 }

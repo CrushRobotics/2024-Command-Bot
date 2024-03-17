@@ -15,6 +15,7 @@ public class IntakeSubsystem extends SubsystemBase {
     
     private final CANSparkMax intakeArm;
     private final CANSparkMax intakeWheels;
+    private final double LOW_POSITION = 0;
 
 
     public IntakeSubsystem(){
@@ -74,5 +75,27 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public void setIntakePostion(double position){
         this.position = position;
+    }
+
+    public void lowerIntake()
+    {
+        setIntakePostion(LOW_POSITION);
+    }
+
+    public void raiseIntake()
+    {
+        setIntakePostion(0);
+    }
+
+    public void toggleIntake()
+    {
+        if (position != 0)
+        {
+            setIntakePostion(LOW_POSITION);
+        }
+        else 
+        {
+            setIntakePostion(0);
+        }
     }
 }

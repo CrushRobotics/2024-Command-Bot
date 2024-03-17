@@ -7,9 +7,13 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FeedShooterCommand;
+import frc.robot.commands.LowerAndRunIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -32,6 +36,8 @@ public class RobotContainer {
   private final DigitalInput limitSwitch = new DigitalInput(8);
   private final DigitalInput beamBreak = new DigitalInput(0);
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -74,6 +80,8 @@ public class RobotContainer {
       .onFalse(Commands.runOnce(() -> SmartDashboard.putBoolean("Beam Break", false)));
       
     m_driverController.a().whileTrue(Commands.run(() -> armSubsystem.setTarget(25), armSubsystem));
+    m_driverController.b().onTrue(new FeedShooterCommand(intakeSubsystem, shooterSubsystem));
+    m_driverController.rightBumper().whileTrue(new LowerAndRunIntakeCommand(intakeSubsystem));
   }
 
   /**

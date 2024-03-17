@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.util.Units;
 
@@ -135,6 +134,7 @@ public class DriveSubsystem extends SubsystemBase {
         return kinematics.toChassisSpeeds(wheelSpeeds);
     }
 
+    // Distance in meters
     public void driveDistance (double distance)
     {
         // Setup distance flag to tell the period function that we're 
