@@ -14,7 +14,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem () {
         
-        shooterMotor = new CANSparkMax(7, MotorType.kBrushless);
+        shooterMotor = new CANSparkMax(05, MotorType.kBrushless);
         ringDetector = new DigitalInput(1);
 
         // Reset to factory defaults
@@ -30,7 +30,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void shoot ()
     {
-        shooterMotor.set(-.8);
+        shooterMotor.set(-.6);
+    }
+
+    public void stop() {
+        shooterMotor.set(0);
     }
 
     public boolean hasRing ()

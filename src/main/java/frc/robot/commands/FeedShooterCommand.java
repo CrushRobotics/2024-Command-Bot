@@ -6,27 +6,31 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class FeedShooterCommand extends Command {
     private ShooterSubsystem shooterSubsystem;
-    private IntakeSubsystem intakeSubsystem;
 
-    public FeedShooterCommand(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem)
+    public FeedShooterCommand(ShooterSubsystem shooterSubsystem)
     {
         addRequirements(shooterSubsystem);
-        addRequirements(intakeSubsystem);
         
         this.shooterSubsystem = shooterSubsystem;
-        this.intakeSubsystem = intakeSubsystem;
     }
 
     @Override
     public void execute()
     {
-        intakeSubsystem.intTakeOn();
+        //intakeSubsystem.intTakeOn();
         shooterSubsystem.runIntake();
+    }
+
+    @Override
+    public void end(boolean isInterrupted) {
+
+        shooterSubsystem.stop();
     }
 
     @Override
     public boolean isFinished()
     {
-        return shooterSubsystem.hasRing();
+        return false;
+        //return shooterSubsystem.hasRing();
     }
 }

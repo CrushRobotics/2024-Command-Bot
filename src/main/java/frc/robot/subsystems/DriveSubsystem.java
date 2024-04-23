@@ -88,8 +88,8 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // Update dashboard with encoder measurements
-        SmartDashboard.putNumber("Left Encoder", leftEncoder.getPosition());
-        SmartDashboard.putNumber("Right Encoder", rightEncoder.getPosition());
+        SmartDashboard.putNumber("Left Drive Encoder", leftEncoder.getPosition());
+        SmartDashboard.putNumber("Right Drive Encoder", rightEncoder.getPosition());
 
         // Update dashboard with angle
         SmartDashboard.putNumber("Angle", ahrs.getAngle());

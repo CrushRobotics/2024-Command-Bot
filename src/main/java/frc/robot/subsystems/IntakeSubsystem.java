@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public IntakeSubsystem(){
         intakeArm = new CANSparkMax(7, MotorType.kBrushless);
-        intakeWheels = new CANSparkMax(8, MotorType.kBrushless);
+        intakeWheels = new CANSparkMax(05, MotorType.kBrushless);
         encoder = intakeArm.getEncoder();
 
         // Reset to factory defaults
@@ -36,8 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
         
     }
 
+    /*
     @Override
     public void periodic(){
+        
         double currentPosition = encoder.getPosition();
 
         if (currentPosition == position) {
@@ -60,6 +62,7 @@ public class IntakeSubsystem extends SubsystemBase {
         }
 
     }
+    */
 
     public void intTakeOn(){
         intakeWheels.set(0.3);

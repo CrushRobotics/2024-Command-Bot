@@ -11,4 +11,16 @@ public class ShootCommand extends Command {
         this.shooterSubsystem = shooterSubsystem;
         addRequirements(shooterSubsystem);
     }
+
+    @Override
+    public void execute() {
+
+        shooterSubsystem.shoot();
+
+    }
+
+    @Override
+    public void end(boolean isInterrupted) {
+        shooterSubsystem.stop();
+    }
 }

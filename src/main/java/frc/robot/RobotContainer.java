@@ -6,10 +6,18 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ClimberClimbCommand;
+import frc.robot.commands.ClimberLowerCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FeedShooterCommand;
 import frc.robot.commands.LowerAndRunIntakeCommand;
+import frc.robot.commands.MoveArmCommand;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShootingPositionCommand;
+import frc.robot.commands.MoveArmCommand.ArmDirection;
+import frc.robot.commands.ShootingPositionCommand.ArmAngle;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -33,15 +41,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  private final DigitalInput limitSwitch = new DigitalInput(8);
-  private final DigitalInput beamBreak = new DigitalInput(0);
+ // private final DigitalInput limitSwitch = new DigitalInput(8);
+  //private final DigitalInput beamBreak = new DigitalInput(0);
   private final ArmSubsystem armSubsystem = new ArmSubsystem();
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-  private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  //private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  private final CommandXboxController m_armShooterController = 
+      new CommandXboxController(OperatorConstants.kShooterControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -69,19 +81,17 @@ public class RobotContainer {
     // cancelling on release.
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     //m_driverController.a().whileTrue(new LimelightCommand(m_driverController, m_driveSubsystem));
-    Trigger y = new Trigger(limitSwitch::get);
-    y
-      .onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("Limit Switch", true)))
-      .onFalse(Commands.runOnce(() -> SmartDashboard.putBoolean("Limit Switch", false)));
-
-    Trigger beamTrigger = new Trigger(beamBreak::get);
-    beamTrigger
-      .onTrue(Commands.runOnce(() -> SmartDashboard.putBoolean("Beam Break", true)))
-      .onFalse(Commands.runOnce(() -> SmartDashboard.putBoolean("Beam Break", false)));
-      
-    m_driverController.a().whileTrue(Commands.run(() -> armSubsystem.setTarget(25), armSubsystem));
-    m_driverController.b().onTrue(new FeedShooterCommand(intakeSubsystem, shooterSubsystem));
-    m_driverController.rightBumper().whileTrue(new LowerAndRunIntakeCommand(intakeSubsystem));
+    m_driverController.leftBumper().whileTrue(new ClimberLowerCommand(climberSubsystem));
+    m_driverController.rightBumper().whileTrue(new ClimberClimbCommand(climberSubsystem));
+ 
+    m_armShooterController.rightBumper().whileTrue(new ShootCommand(shooterSubsystem));
+    //m_armShooterController.a().whileTrue(new ShootingPositionCommand(armSubsystem));
+    m_armShooterController.b().whileTrue(new FeedShooterCommand(shooterSubsystem));
+    m_armShooterController.y().whileTrue(new MoveArmCommand(armSubsystem, ArmDirection.Up));
+    m_armShooterController.x().whileTrue(new MoveArmCommand(armSubsystem, ArmDirection.Down));
+    //m_armShooterController.rightBumper().whileTrue(new LowerAndRunIntakeCommand(intakeSubsystem));
+    m_armShooterController.povLeft().whileTrue(new ShootingPositionCommand(armSubsystem, ArmAngle.ShootAngle));
+    m_armShooterController.povRight().whileTrue(new ShootingPositionCommand(armSubsystem, ArmAngle.SourceAngle));
   }
 
   /**

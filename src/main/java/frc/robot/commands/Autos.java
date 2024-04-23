@@ -17,7 +17,7 @@ public final class Autos {
 
   public static Command driveDistanceAuto(DriveSubsystem driveSubsystem, double distance)
   {
-    return Commands.runOnce(() -> driveSubsystem.driveDistance(distance), driveSubsystem);
+    return Commands.run(() -> driveSubsystem.arcadeDrive(.5, 0.0), driveSubsystem).withTimeout(2);
   }
 
   private Autos() {

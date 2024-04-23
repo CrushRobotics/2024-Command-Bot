@@ -43,7 +43,8 @@ public class DefaultDriveCommand extends Command {
 
     @Override
     public void execute() {
-        arcadeMode = getArcadeDrive();
+        //arcadeMode = getArcadeDrive();
+        arcadeMode = true;
 
         var multiplier = DEFAULT_MULTIPLIER;
 

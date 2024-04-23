@@ -17,9 +17,22 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kShooterControllerPort = 1;
   }
 
   public static class DriveConstants {
     public static final double encoderConversionFactor = (1/5.0) * (Units.inchesToMeters(4) * Math.PI);
+  }
+
+  public static class ArmConstants {
+    public static final double MIN_BOUND = -13;
+    public static final double MAX_BOUND = -.5;
+    public static final double SHOOTING_POSITION = -7.1;
+    public static final double SOURCE_POSITION = -3.57;
+  } 
+
+  public static class ClimberConstants {
+    public static final double MIN_BOUND = .1;
+    public static final double MAX_BOUND = 85;
   }
 }
